@@ -1,6 +1,6 @@
 {
     "name": "ycs77/laravel-restore-session-id",
-    "description": "Restore Laravel session ID from 3rd party API form post back",
+    "description": "Restore Laravel session ID when form post back from 3rd party API.",
     "type": "library",
     "license": "MIT",
     "authors": [
