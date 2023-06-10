@@ -23,6 +23,11 @@ class RestoreSessionId
     protected Encrypter $encrypter;
 
     /**
+     * The session ID key for get from request.
+     */
+    protected string $sessionIdKey = 'sid';
+
+    /**
      * Create a new middleware.
      */
     public function __construct(Session $session, Encrypter $encrypter)
@@ -36,9 +41,13 @@ class RestoreSessionId
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $key = 'sid'): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        if ($sessionId = $this->decryptSessionId($request, $key)) {
+        $encryptedSessionId = $this->getSessionIdFromRequest($request);
+
+        if ($encryptedSessionId &&
+            $sessionId = $this->decryptSessionId($encryptedSessionId)
+        ) {
             $this->restoreSessionId($this->session, $sessionId);
         }
 
@@ -46,12 +55,20 @@ class RestoreSessionId
     }
 
     /**
-     * Decrypt the session id from callback url query.
+     * Get session ID from request.
      */
-    protected function decryptSessionId(Request $request, string $key): string
+    protected function getSessionIdFromRequest(Request $request): string|null
+    {
+        return $request->query($this->sessionIdKey);
+    }
+
+    /**
+     * Decrypt the session ID from callback url query.
+     */
+    protected function decryptSessionId(string $sessionId): string
     {
         try {
-            return $this->encrypter->decrypt(Base64Url::decode($request->query($key)), false);
+            return $this->encrypter->decrypt(Base64Url::decode($sessionId), false);
         } catch (DecryptException $e) {
             $this->undecrypted($e);
         }
@@ -66,7 +83,7 @@ class RestoreSessionId
     }
 
     /**
-     * Restore the session id for current request.
+     * Restore the session ID for current request.
      */
     protected function restoreSessionId(Session $session, string $sessionId): void
     {
