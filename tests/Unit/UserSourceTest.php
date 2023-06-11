@@ -23,10 +23,6 @@ test('can preserve user source data to session', function () {
     $userSource = new UserSource($session);
 
     $userSource->preserve($request);
-
-    m::close();
-
-    expect(true)->toBeTrue();
 });
 
 test('user source is validated', function () {
