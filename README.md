@@ -72,6 +72,11 @@ If you think this package has helped you, please consider [Becoming a sponsor](h
   <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron" />
 </a>
 
+## Credits
+
+* [SameSite Cookie 之踩坑過程](https://kira5033.github.io/2020/09/samesite-cookie-%E4%B9%8B%E8%B8%A9%E5%9D%91%E9%81%8E%E7%A8%8B/)
+* [imi/laravel-transsid](https://github.com/iMi-digital/laravel-transsid)
+
 ## License
 
 [MIT LICENSE](LICENSE)
