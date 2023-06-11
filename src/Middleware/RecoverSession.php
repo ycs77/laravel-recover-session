@@ -104,5 +104,7 @@ class RecoverSession
 
             $session->start();
         }
+
+        $this->userSource->clear();
     }
 }

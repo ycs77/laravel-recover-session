@@ -13,7 +13,7 @@ class UserSource
     protected Session $session;
 
     /**
-     * The key for user source into session.
+     * The key for user information in session.
      */
     protected string $sessionKey = 'user_source_for_recover_session_id';
 
@@ -52,5 +52,13 @@ class UserSource
             && $userSource['ip'] === $request->getClientIp()
             && $userSource['user_agent'] === md5($request->server('HTTP_USER_AGENT'))
             && now()->lt($userSource['expired_at']);
+    }
+
+    /**
+     * Clear the user information.
+     */
+    public function clear(): void
+    {
+        $this->session->remove($this->sessionKey);
     }
 }
