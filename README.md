@@ -71,6 +71,16 @@ Route::post('/pay/callback', [PaymentController::class, 'callback'])
 
 > Reference details for SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
 
+## User source
+
+### User source expired time
+
+The default expiration time for user source is set to 60 minutes (1 hour), but you have the option to modify this value if desired:
+
+```php
+RecoverSession::preserveUserSource($request, 20); // preserve 20 minutes
+```
+
 ## Sponsor
 
 If you think this package has helped you, please consider [Becoming a sponsor](https://www.patreon.com/ycs77) to support my work~ and your avatar will be visible on my major projects.

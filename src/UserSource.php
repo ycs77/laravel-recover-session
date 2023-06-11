@@ -28,12 +28,12 @@ class UserSource
     /**
      * Preserve the user information into session.
      */
-    public function preserve(Request $request): void
+    public function preserve(Request $request, int $minutes = 60): void
     {
         $this->session->put($this->sessionKey, [
             'ip' => $request->getClientIp(),
             'user_agent' => md5($request->server('HTTP_USER_AGENT')),
-            'expired_at' => (string) now()->addMinutes(60),
+            'expired_at' => (string) now()->addMinutes($minutes),
         ]);
     }
 
