@@ -9,6 +9,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Ycs77\LaravelRestoreSessionId\Support\Base64Url;
+use Ycs77\LaravelRestoreSessionId\UserSource;
 
 class RestoreSessionId
 {
@@ -23,6 +24,11 @@ class RestoreSessionId
     protected Encrypter $encrypter;
 
     /**
+     * The user source manager instance.
+     */
+    protected UserSource $userSource;
+
+    /**
      * The session ID key for get from request.
      */
     protected string $sessionIdKey = 'sid';
@@ -30,10 +36,11 @@ class RestoreSessionId
     /**
      * Create a new middleware.
      */
-    public function __construct(Session $session, Encrypter $encrypter)
+    public function __construct(Session $session, Encrypter $encrypter, UserSource $userSource)
     {
         $this->session = $session;
         $this->encrypter = $encrypter;
+        $this->userSource = $userSource;
     }
 
     /**
@@ -48,7 +55,7 @@ class RestoreSessionId
         if ($encryptedSessionId &&
             $sessionId = $this->decryptSessionId($encryptedSessionId)
         ) {
-            $this->restoreSessionId($this->session, $sessionId);
+            $this->restoreSessionId($request, $this->session, $sessionId);
         }
 
         return $next($request);
@@ -85,12 +92,17 @@ class RestoreSessionId
     /**
      * Restore the session ID for current request.
      */
-    protected function restoreSessionId(Session $session, string $sessionId): void
+    protected function restoreSessionId(Request $request, Session $session, string $sessionId): void
     {
-        $session->invalidate();
-
         $session->setId($sessionId);
 
         $session->start();
+
+        if (! $this->userSource->validate($request)) {
+            // If user soruce is invalid, will regenerate a new session id.
+            $session->setId(null);
+
+            $session->start();
+        }
     }
 }

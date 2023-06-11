@@ -49,7 +49,20 @@ class Kernel extends HttpKernel
 }
 ```
 
-Additionally, you can add the `RestoreSessionId` middleware to the callback route for the API. This middleware will automatically retrieve the encrypted session ID from the callback URL and restore the original session state:
+Then you can preserve current user source data before 3rd party API, make sure to return the same user to resume the session:
+
+```php
+use Ycs77\LaravelRestoreSessionId\RestoreSessionId;
+
+public function form(Request $request)
+{
+    RestoreSessionId::preserveUserSource($request);
+
+    // post form to 3rd party API...
+}
+```
+
+Final, you can add the `RestoreSessionId` middleware to the callback route for the API. This middleware will automatically retrieve the encrypted session ID from the callback URL and restore the original session state:
 
 ```php
 Route::post('/pay/callback', [PaymentController::class, 'callback'])
