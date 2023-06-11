@@ -8,12 +8,15 @@ use Ycs77\LaravelRecoverSession\UserSource;
 $sid = 'eyJpdiI6IjB2TVU4SWFYUHJiMDJveU5WLzRiR2c9PSIsInZhbHVlIjoiYW01VzdRQ0RIakQzUklISkJmWTMyVDd6bDdISHRLL2dDb1QxaXVDS2hUVnJ3T1dJTEhaQWFsb1ZTTlZWMlRHZCIsIm1hYyI6IjEzNjAzOWNiNTRlMzQ1NmU0N2I0YWUyMzAzOTcwZTA3MWRiNTUzYjIyZDhmNjYzOGMxMzk5MDk1ZThmZjk1YjIiLCJ0YWciOiIifQ=='; // encrypted "sessionid0000000000000000000000000000000"
 
 test('can recover session ID from url', function () use ($sid) {
+    /** @var \Illuminate\Foundation\Application */
+    $app = $this->app;
+
     now()->setTestNow('2000-01-01 00:00:00');
 
     $request = Request::create("/?sid=$sid", 'POST');
 
     /** @var \Illuminate\Session\Store */
-    $session = $this->app->make('session.store');
+    $session = $app->make('session.store');
     $session->setId(null);
     $session->put('user_source_for_recover_session_id', [
         'ip' => '127.0.0.1',
@@ -22,10 +25,10 @@ test('can recover session ID from url', function () use ($sid) {
     ]);
 
     /** @var \Illuminate\Encryption\Encrypter */
-    $encrypter = $this->app->make('encrypter');
+    $encrypter = $app->make('encrypter');
 
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
-    $userSource = $this->app->make(UserSource::class);
+    $userSource = $app->make(UserSource::class);
 
     $middleware = new RecoverSession($session, $encrypter, $userSource);
 
@@ -35,17 +38,20 @@ test('can recover session ID from url', function () use ($sid) {
 });
 
 test('can pass if session ID is not from url', function () {
+    /** @var \Illuminate\Foundation\Application */
+    $app = $this->app;
+
     $request = Request::create('/', 'POST');
 
     /** @var \Illuminate\Session\Store */
-    $session = $this->app->make('session.store');
+    $session = $app->make('session.store');
     $session->setId(null);
 
     /** @var \Illuminate\Encryption\Encrypter */
-    $encrypter = $this->app->make('encrypter');
+    $encrypter = $app->make('encrypter');
 
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
-    $userSource = $this->app->make(UserSource::class);
+    $userSource = $app->make(UserSource::class);
 
     $middleware = new RecoverSession($session, $encrypter, $userSource);
 
@@ -55,12 +61,15 @@ test('can pass if session ID is not from url', function () {
 });
 
 test('can pass if session ID is expired', function () use ($sid) {
+    /** @var \Illuminate\Foundation\Application */
+    $app = $this->app;
+
     now()->setTestNow('2000-01-01 01:03:07');
 
     $request = Request::create("/?sid=$sid", 'POST');
 
     /** @var \Illuminate\Session\Store */
-    $session = $this->app->make('session.store');
+    $session = $app->make('session.store');
     $session->setId(null);
     $session->put('user_source_for_recover_session_id', [
         'ip' => '127.0.0.1',
@@ -69,10 +78,10 @@ test('can pass if session ID is expired', function () use ($sid) {
     ]);
 
     /** @var \Illuminate\Encryption\Encrypter */
-    $encrypter = $this->app->make('encrypter');
+    $encrypter = $app->make('encrypter');
 
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
-    $userSource = $this->app->make(UserSource::class);
+    $userSource = $app->make(UserSource::class);
 
     $middleware = new RecoverSession($session, $encrypter, $userSource);
 
