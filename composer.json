@@ -1,6 +1,6 @@
 {
-    "name": "ycs77/laravel-restore-session-id",
-    "description": "Restore Laravel session ID when form post back from 3rd party API.",
+    "name": "ycs77/laravel-recover-session",
+    "description": "Recover Laravel session when form post back from 3rd party API.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -9,7 +9,7 @@
             "email": "yangchenshin77@gmail.com"
         }
     ],
-    "homepage": "https://github.com/ycs77/laravel-restore-session-id",
+    "homepage": "https://github.com/ycs77/laravel-recover-session",
     "require": {
         "php": ">=8.1",
         "illuminate/contracts": ">=9.0",
@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Ycs77\\LaravelRestoreSessionId\\": "src/"
+            "Ycs77\\LaravelRecoverSession\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ycs77\\LaravelRestoreSessionId\\Tests\\": "tests"
+            "Ycs77\\LaravelRecoverSession\\Tests\\": "tests"
         }
     },
     "scripts": {

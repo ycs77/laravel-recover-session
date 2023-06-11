@@ -1,6 +1,6 @@
 <?php
 
-namespace Ycs77\LaravelRestoreSessionId\Tests;
+namespace Ycs77\LaravelRecoverSession\Tests;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Orchestra\Testbench\TestCase as BaseTestCase;

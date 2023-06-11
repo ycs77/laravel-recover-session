@@ -1,6 +1,6 @@
 <?php
 
-namespace Ycs77\LaravelRestoreSessionId;
+namespace Ycs77\LaravelRecoverSession;
 
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class UserSource
     /**
      * The key for user source into session.
      */
-    protected string $sessionKey = 'user_source_for_restore_session_id';
+    protected string $sessionKey = 'user_source_for_recover_session_id';
 
     /**
      * Create a new middleware.

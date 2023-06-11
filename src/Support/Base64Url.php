@@ -1,6 +1,6 @@
 <?php
 
-namespace Ycs77\LaravelRestoreSessionId\Support;
+namespace Ycs77\LaravelRecoverSession\Support;
 
 class Base64Url
 {

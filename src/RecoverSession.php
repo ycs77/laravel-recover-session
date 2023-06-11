@@ -1,10 +1,10 @@
 <?php
 
-namespace Ycs77\LaravelRestoreSessionId;
+namespace Ycs77\LaravelRecoverSession;
 
 use Illuminate\Http\Request;
 
-class RestoreSessionId
+class RecoverSession
 {
     /**
      * Preserve the user information into session.

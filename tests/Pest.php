@@ -1,3 +1,3 @@
 <?php
 
-uses(Ycs77\LaravelRestoreSessionId\Tests\TestCase::class)->in('Features');
+uses(Ycs77\LaravelRecoverSession\Tests\TestCase::class)->in('Features');

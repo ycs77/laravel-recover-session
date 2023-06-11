@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use Mockery as m;
-use Ycs77\LaravelRestoreSessionId\UserSource;
+use Ycs77\LaravelRecoverSession\UserSource;
 
 test('can preserve user source data to session', function () {
     now()->setTestNow('2000-01-01 00:00:00');
@@ -14,7 +14,7 @@ test('can preserve user source data to session', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('put')
         ->once()
-        ->with('user_source_for_restore_session_id', [
+        ->with('user_source_for_recover_session_id', [
             'ip' => '127.0.0.1',
             'user_agent' => md5('Symfony'),
             'expired_at' => '2000-01-01 01:00:00',
@@ -38,7 +38,7 @@ test('user source is validated', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('get')
         ->once()
-        ->with('user_source_for_restore_session_id')
+        ->with('user_source_for_recover_session_id')
         ->andReturn([
             'ip' => '127.0.0.1',
             'user_agent' => md5('Symfony'),
@@ -59,7 +59,7 @@ test('user source is invalid', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('get')
         ->once()
-        ->with('user_source_for_restore_session_id')
+        ->with('user_source_for_recover_session_id')
         ->andReturn([
             'ip' => '127.0.0.1',
             'user_agent' => md5('Symfony'),

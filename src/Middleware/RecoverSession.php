@@ -1,6 +1,6 @@
 <?php
 
-namespace Ycs77\LaravelRestoreSessionId\Middleware;
+namespace Ycs77\LaravelRecoverSession\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -8,10 +8,10 @@ use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Ycs77\LaravelRestoreSessionId\Support\Base64Url;
-use Ycs77\LaravelRestoreSessionId\UserSource;
+use Ycs77\LaravelRecoverSession\Support\Base64Url;
+use Ycs77\LaravelRecoverSession\UserSource;
 
-class RestoreSessionId
+class RecoverSession
 {
     /**
      * The session store instance.
@@ -55,7 +55,7 @@ class RestoreSessionId
         if ($encryptedSessionId &&
             $sessionId = $this->decryptSessionId($encryptedSessionId)
         ) {
-            $this->restoreSessionId($request, $this->session, $sessionId);
+            $this->recoverSession($request, $this->session, $sessionId);
         }
 
         return $next($request);
@@ -90,9 +90,9 @@ class RestoreSessionId
     }
 
     /**
-     * Restore the session ID for current request.
+     * Recover the session ID for current request.
      */
-    protected function restoreSessionId(Request $request, Session $session, string $sessionId): void
+    protected function recoverSession(Request $request, Session $session, string $sessionId): void
     {
         $session->setId($sessionId);
 
