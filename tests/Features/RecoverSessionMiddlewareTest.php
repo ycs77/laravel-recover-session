@@ -18,9 +18,11 @@ test('can recover session ID from url', function () use ($sid) {
     /** @var \Illuminate\Session\Store */
     $session = $app->make('session.store');
     $session->setId(null);
-    $session->put('user_source_for_recover_session_id', [
-        'ip' => '127.0.0.1',
-        'user_agent' => md5('Symfony'),
+    $session->put('user_source_for_recover_session', [
+        'hash' => md5(json_encode([
+            'ip' => '127.0.0.1',
+            'user_agent' => 'Symfony',
+        ])),
         'expired_at' => '2000-01-01 01:00:00',
     ]);
 
@@ -35,7 +37,7 @@ test('can recover session ID from url', function () use ($sid) {
     $middleware->handle($request, fn () => new Response());
 
     expect($session->getId())->toBe('sessionid0000000000000000000000000000000');
-    expect($session->get('user_source_for_recover_session_id'))->toBeNull();
+    expect($session->get('user_source_for_recover_session'))->toBeNull();
 });
 
 test('can pass if session ID is not from url', function () {
@@ -59,7 +61,7 @@ test('can pass if session ID is not from url', function () {
     $middleware->handle($request, fn () => new Response());
 
     expect($session->getId())->not()->toBe('sessionid0000000000000000000000000000000');
-    expect($session->get('user_source_for_recover_session_id'))->toBeNull();
+    expect($session->get('user_source_for_recover_session'))->toBeNull();
 });
 
 test('can pass if session ID is expired', function () use ($sid) {
@@ -73,9 +75,11 @@ test('can pass if session ID is expired', function () use ($sid) {
     /** @var \Illuminate\Session\Store */
     $session = $app->make('session.store');
     $session->setId(null);
-    $session->put('user_source_for_recover_session_id', [
-        'ip' => '127.0.0.1',
-        'user_agent' => md5('Symfony'),
+    $session->put('user_source_for_recover_session', [
+        'hash' => md5(json_encode([
+            'ip' => '127.0.0.1',
+            'user_agent' => 'Symfony',
+        ])),
         'expired_at' => '2000-01-01 01:00:00',
     ]);
 
@@ -90,5 +94,5 @@ test('can pass if session ID is expired', function () use ($sid) {
     $middleware->handle($request, fn () => new Response());
 
     expect($session->getId())->not()->toBe('sessionid0000000000000000000000000000000');
-    expect($session->get('user_source_for_recover_session_id'))->toBeNull();
+    expect($session->get('user_source_for_recover_session'))->toBeNull();
 });

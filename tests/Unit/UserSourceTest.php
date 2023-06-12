@@ -14,9 +14,11 @@ test('can preserve user source data to session', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('put')
         ->once()
-        ->with('user_source_for_recover_session_id', [
-            'ip' => '127.0.0.1',
-            'user_agent' => md5('Symfony'),
+        ->with('user_source_for_recover_session', [
+            'hash' => md5(json_encode([
+                'ip' => '127.0.0.1',
+                'user_agent' => 'Symfony',
+            ])),
             'expired_at' => '2000-01-01 01:00:00',
         ]);
 
@@ -34,10 +36,12 @@ test('user source is validated', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('get')
         ->once()
-        ->with('user_source_for_recover_session_id')
+        ->with('user_source_for_recover_session')
         ->andReturn([
-            'ip' => '127.0.0.1',
-            'user_agent' => md5('Symfony'),
+            'hash' => md5(json_encode([
+                'ip' => '127.0.0.1',
+                'user_agent' => 'Symfony',
+            ])),
             'expired_at' => '2000-01-01 01:00:00',
         ]);
 
@@ -55,10 +59,12 @@ test('user source is invalid', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('get')
         ->once()
-        ->with('user_source_for_recover_session_id')
+        ->with('user_source_for_recover_session')
         ->andReturn([
-            'ip' => '127.0.0.1',
-            'user_agent' => md5('Symfony'),
+            'hash' => md5(json_encode([
+                'ip' => '127.0.0.1',
+                'user_agent' => 'Symfony',
+            ])),
             'expired_at' => '2000-01-01 01:00:00',
         ]);
 
@@ -72,7 +78,7 @@ test('can clear user source', function () {
     $session = m::mock(Store::class);
     $session->shouldReceive('remove')
         ->once()
-        ->with('user_source_for_recover_session_id');
+        ->with('user_source_for_recover_session');
 
     $userSource = new UserSource($session);
 

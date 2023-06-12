@@ -15,7 +15,7 @@ class UserSource
     /**
      * The key for user information in session.
      */
-    protected string $sessionKey = 'user_source_for_recover_session_id';
+    protected string $sessionKey = 'user_source_for_recover_session';
 
     /**
      * Create a new middleware.
@@ -31,8 +31,10 @@ class UserSource
     public function preserve(Request $request, int $minutes = 60): void
     {
         $this->session->put($this->sessionKey, [
-            'ip' => $request->getClientIp(),
-            'user_agent' => md5($request->server('HTTP_USER_AGENT')),
+            'hash' => md5(json_encode([
+                'ip' => $request->getClientIp(),
+                'user_agent' => $request->server('HTTP_USER_AGENT'),
+            ])),
             'expired_at' => (string) now()->addMinutes($minutes),
         ]);
     }
@@ -46,11 +48,12 @@ class UserSource
 
         return $userSource
             && is_array($userSource)
-            && isset($userSource['ip'])
-            && isset($userSource['user_agent'])
+            && isset($userSource['hash'])
             && isset($userSource['expired_at'])
-            && $userSource['ip'] === $request->getClientIp()
-            && $userSource['user_agent'] === md5($request->server('HTTP_USER_AGENT'))
+            && $userSource['hash'] === md5(json_encode([
+                'ip' => $request->getClientIp(),
+                'user_agent' => $request->server('HTTP_USER_AGENT'),
+            ]))
             && now()->lt($userSource['expired_at']);
     }
 
