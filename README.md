@@ -6,7 +6,7 @@
 [![Style CI Build Status][ico-style-ci]][link-style-ci]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Recover Laravel session when form post back from 3rd party API.
+Recover Laravel session when form post back from third-party API.
 
 ## Installation
 
@@ -49,16 +49,27 @@ class Kernel extends HttpKernel
 }
 ```
 
-Then you can preserve current user source data before 3rd party API, make sure to return the same user to resume the session:
+Now you need to save the current session ID in your callback URL, so that the current session can be resumed after the API returns:
+
+```php
+use Illuminate\Support\Facades\Session;
+
+public function pay(Request $request)
+{
+    ThirdPartyApi::callbackUrl('/pay/callback?sid='.Session::getId());
+}
+```
+
+Then you can preserve current user source data before third-party API, make sure is same user to resume the session:
 
 ```php
 use Ycs77\LaravelRecoverSession\RecoverSession;
 
-public function form(Request $request)
+public function pay(Request $request)
 {
     RecoverSession::preserveUserSource($request);
 
-    // post form to 3rd party API...
+    // post form to third-party API...
 }
 ```
 

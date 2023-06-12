@@ -1,6 +1,6 @@
 {
     "name": "ycs77/laravel-recover-session",
-    "description": "Recover Laravel session when form post back from 3rd party API.",
+    "description": "Recover Laravel session when form post back from third-party API.",
     "type": "library",
     "license": "MIT",
     "authors": [
