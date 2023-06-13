@@ -60,7 +60,7 @@ test('can pass if session ID is not from url', function () {
 
     $middleware->handle($request, fn () => new Response());
 
-    expect($session->getId())->not()->toBe('sessionid0000000000000000000000000000000');
+    expect($session->getId())->not->toBe('sessionid0000000000000000000000000000000');
     expect($session->get('user_source_for_recover_session'))->toBeNull();
 });
 
@@ -93,6 +93,6 @@ test('can pass if session ID is expired', function () use ($sid) {
 
     $middleware->handle($request, fn () => new Response());
 
-    expect($session->getId())->not()->toBe('sessionid0000000000000000000000000000000');
+    expect($session->getId())->not->toBe('sessionid0000000000000000000000000000000');
     expect($session->get('user_source_for_recover_session'))->toBeNull();
 });
