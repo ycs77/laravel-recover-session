@@ -19,4 +19,17 @@ class TestCase extends BaseTestCase
             $config->set('app.key', 'base64:Wcss5GOQHb19G93cevYxpeZf39zhOvIxxY7ZzY/48lM=');
         });
     }
+
+    /**
+     * Get package providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return array<int, class-string>
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            'Ycs77\LaravelRecoverSession\RecoverSessionServiceProvider',
+        ];
+    }
 }

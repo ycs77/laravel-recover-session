@@ -39,6 +39,13 @@
             "@php vendor/bin/testbench package:discover --ansi"
         ]
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ycs77\\LaravelRecoverSession\\RecoverSessionServiceProvider"
+            ]
+        }
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {

@@ -3,6 +3,7 @@
 namespace Ycs77\LaravelRecoverSession\Middleware;
 
 use Closure;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Session\Session;
@@ -13,6 +14,11 @@ use Ycs77\LaravelRecoverSession\UserSource;
 
 class RecoverSession
 {
+    /**
+     * The config instance.
+     */
+    protected Config $config;
+
     /**
      * The session store instance.
      */
@@ -29,15 +35,14 @@ class RecoverSession
     protected UserSource $userSource;
 
     /**
-     * The session ID key for get from request.
-     */
-    protected string $sessionIdKey = 'sid';
-
-    /**
      * Create a new middleware.
      */
-    public function __construct(Session $session, Encrypter $encrypter, UserSource $userSource)
+    public function __construct(Config $config,
+                                Session $session,
+                                Encrypter $encrypter,
+                                UserSource $userSource)
     {
+        $this->config = $config;
         $this->session = $session;
         $this->encrypter = $encrypter;
         $this->userSource = $userSource;
@@ -66,7 +71,9 @@ class RecoverSession
      */
     protected function getSessionIdFromRequest(Request $request): string|null
     {
-        return $request->query($this->sessionIdKey);
+        return $request->query(
+            $this->config->get('recover-session.session_id_key')
+        );
     }
 
     /**

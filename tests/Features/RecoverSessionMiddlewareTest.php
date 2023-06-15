@@ -15,6 +15,9 @@ test('can recover session ID from url', function () use ($sid) {
 
     $request = Request::create("/?sid=$sid", 'POST');
 
+    /** @var \Illuminate\Config\Repository */
+    $config = $app->make('config');
+
     /** @var \Illuminate\Session\Store */
     $session = $app->make('session.store');
     $session->setId(null);
@@ -32,7 +35,7 @@ test('can recover session ID from url', function () use ($sid) {
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
     $userSource = $app->make(UserSource::class);
 
-    $middleware = new RecoverSession($session, $encrypter, $userSource);
+    $middleware = new RecoverSession($config, $session, $encrypter, $userSource);
 
     $middleware->handle($request, fn () => new Response());
 
@@ -46,6 +49,9 @@ test('can pass if session ID is not from url', function () {
 
     $request = Request::create('/', 'POST');
 
+    /** @var \Illuminate\Config\Repository */
+    $config = $app->make('config');
+
     /** @var \Illuminate\Session\Store */
     $session = $app->make('session.store');
     $session->setId(null);
@@ -56,7 +62,7 @@ test('can pass if session ID is not from url', function () {
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
     $userSource = $app->make(UserSource::class);
 
-    $middleware = new RecoverSession($session, $encrypter, $userSource);
+    $middleware = new RecoverSession($config, $session, $encrypter, $userSource);
 
     $middleware->handle($request, fn () => new Response());
 
@@ -72,6 +78,9 @@ test('can pass if session ID is expired', function () use ($sid) {
 
     $request = Request::create("/?sid=$sid", 'POST');
 
+    /** @var \Illuminate\Config\Repository */
+    $config = $app->make('config');
+
     /** @var \Illuminate\Session\Store */
     $session = $app->make('session.store');
     $session->setId(null);
@@ -89,7 +98,7 @@ test('can pass if session ID is expired', function () use ($sid) {
     /** @var \Ycs77\LaravelRecoverSession\UserSource */
     $userSource = $app->make(UserSource::class);
 
-    $middleware = new RecoverSession($session, $encrypter, $userSource);
+    $middleware = new RecoverSession($config, $session, $encrypter, $userSource);
 
     $middleware->handle($request, fn () => new Response());
 
