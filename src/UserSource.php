@@ -2,8 +2,8 @@
 
 namespace Ycs77\LaravelRecoverSession;
 
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store as Session;
 
 class UserSource
 {

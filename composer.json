@@ -12,6 +12,8 @@
     "homepage": "https://github.com/ycs77/laravel-recover-session",
     "require": {
         "php": ">=8.1",
+        "illuminate/cache": ">=9.0",
+        "illuminate/config": ">=9.0",
         "illuminate/contracts": ">=9.0",
         "illuminate/encryption": ">=9.0",
         "illuminate/http": ">=9.0",
@@ -43,7 +45,10 @@
         "laravel": {
             "providers": [
                 "Ycs77\\LaravelRecoverSession\\RecoverSessionServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "RecoverSession": "Ycs77\\LaravelRecoverSession\\Facades\\RecoverSession"
+            }
         }
     },
     "config": {

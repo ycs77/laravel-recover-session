@@ -49,25 +49,17 @@ class Kernel extends HttpKernel
 }
 ```
 
-Now you need to save the current session ID in your callback URL, so that the current session can be resumed after the API returns:
+Now you need to save the current session ID into cache, and put the key in your callback URL, so that the current session can be resumed after the API returns with the key:
 
 ```php
 use Illuminate\Support\Facades\Session;
+use Ycs77\LaravelRecoverSession\Facades\RecoverSession;
 
 public function pay(Request $request)
 {
-    ThirdPartyApi::callbackUrl('/pay/callback?sid='.Session::getId());
-}
-```
+    $key = RecoverSession::preserve($request);
 
-Then you can preserve current user source data before third-party API, make sure is same user to resume the session:
-
-```php
-use Ycs77\LaravelRecoverSession\RecoverSession;
-
-public function pay(Request $request)
-{
-    RecoverSession::preserveUserSource($request);
+    ThirdPartyApi::callbackUrl('/pay/callback?sid='.$key);
 
     // post form to third-party API...
 }
@@ -76,21 +68,13 @@ public function pay(Request $request)
 Final, you can add the `RecoverSession` middleware to the callback route for the API. This middleware will automatically retrieve the encrypted session ID from the callback URL and recover the original session state:
 
 ```php
+use Ycs77\LaravelRecoverSession\Middleware\RecoverSession;
+
 Route::post('/pay/callback', [PaymentController::class, 'callback'])
-    ->middleware(\Ycs77\LaravelRecoverSession\Middleware\RecoverSession::class);
+    ->middleware(RecoverSession::class);
 ```
 
 > Reference details for SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
-
-## User source
-
-### User source expired time
-
-The default expiration time for user source is set to 60 minutes (1 hour), but you have the option to modify this value if desired:
-
-```php
-RecoverSession::preserveUserSource($request, 20); // preserve 20 minutes
-```
 
 ## Sponsor
 
