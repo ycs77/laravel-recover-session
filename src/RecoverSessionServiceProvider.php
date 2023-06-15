@@ -2,6 +2,7 @@
 
 namespace Ycs77\LaravelRecoverSession;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class RecoverSessionServiceProvider extends ServiceProvider
@@ -12,6 +13,18 @@ class RecoverSessionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/recover-session.php', 'recover-session');
+
+        $this->app->singleton(RecoverSession::class, function (Application $app) {
+            $cacheDriver = $app->make('config')->get('recover-session.cache_driver');
+
+            return new RecoverSession(
+                $app->make('config'),
+                $app->make('cache')->store($cacheDriver),
+                $app->make('session.store'),
+                $app->make('encrypter'),
+                $app->make(UserSource::class)
+            );
+        });
     }
 
     /**
