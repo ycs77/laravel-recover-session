@@ -16,6 +16,12 @@ Via Composer:
 composer require ycs77/laravel-recover-session
 ```
 
+Publish config:
+
+```bash
+php artisan vendor:publish --tag=recover-session-config
+```
+
 ## Usage
 
 Currently, the default value for Laravel's Cookie SameSite is set to `Lax`. This prevents cookies from being sent when using form post to transmit data to websites on other domains. As a result, after completing a payment and being redirected back to the original website, there is an issue where the user appears to be automatically logged out due to the inability to retrieve the original login cookie.
