@@ -2,8 +2,12 @@
 
 namespace Ycs77\LaravelRecoverSession;
 
+use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\ServiceProvider;
+use Ycs77\LaravelRecoverSession\Middleware\StartAndRecoverSession;
 
 class RecoverSessionServiceProvider extends ServiceProvider
 {
@@ -25,6 +29,17 @@ class RecoverSessionServiceProvider extends ServiceProvider
                 $app->make(UserSource::class)
             );
         });
+
+        if ($this->app->config['recover-session']['global']) {
+            $this->app->singleton(StartSession::class, function (Application $app) {
+                return new StartAndRecoverSession(
+                    $app->make(SessionManager::class),
+                    $app->make(Config::class),
+                    $app->make(RecoverSession::class),
+                    fn () => $app->make(CacheFactory::class)
+                );
+            });
+        }
     }
 
     /**

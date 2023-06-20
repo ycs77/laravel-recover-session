@@ -24,9 +24,31 @@ php artisan vendor:publish --tag=recover-session-config
 
 ## Usage
 
-Currently, the default value for Laravel's Cookie SameSite is set to `Lax`. This prevents cookies from being sent when using form post to transmit data to websites on other domains. As a result, after completing a payment and being redirected back to the original website, there is an issue where the user appears to be automatically logged out due to the inability to retrieve the original login cookie.
+Currently, the default value for Laravel's Cookie SameSite is set to `Lax`. This prevents cookies from being sent when using form post to transmit data to websites on other domains. As a result, after completing a payment and being redirected back to the original website, there is an issue where the user appears to be automatically logged out due to the inability to retrieve the original login cookie, this package will fix this.
 
-To address this, we need to adjust the order of the middleware so that `RecoverSession` is placed below `StartSession`. By default, Laravel's `Kernel` does not have the `$middlewarePriority` property. You can find it in the Laravel Framework or copy the code below and paste it into `app/Http/Kernel.php`:
+Now you need to call `RecoverSession::preserve()` to save the current session ID into cache, and put the key in your callback URL, so that the current session can be resumed after the API returns with the key:
+
+```php
+use Illuminate\Support\Facades\Session;
+use Ycs77\LaravelRecoverSession\Facades\RecoverSession;
+
+public function pay(Request $request)
+{
+    $key = RecoverSession::preserve($request);
+
+    ThirdPartyApi::callbackUrl('/pay/callback?sid='.$key);
+
+    // post form to third-party API...
+}
+```
+
+Thsi package will automatically retrieve the encrypted session ID from the callback URL and recover the original session state on back to this site.
+
+> Reference details for SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
+
+## Locally Middleware
+
+If you don't using the global recover session, you can set the config `recover-session.global` to `true`, and to adjust the order of the middleware so that `RecoverSession` is placed below `StartSession`. By default, Laravel's `Kernel` does not have the `$middlewarePriority` property. You can find it in the Laravel Framework or copy the code below and paste it into `app/Http/Kernel.php`:
 
 ```php
 class Kernel extends HttpKernel
@@ -55,23 +77,7 @@ class Kernel extends HttpKernel
 }
 ```
 
-Now you need to save the current session ID into cache, and put the key in your callback URL, so that the current session can be resumed after the API returns with the key:
-
-```php
-use Illuminate\Support\Facades\Session;
-use Ycs77\LaravelRecoverSession\Facades\RecoverSession;
-
-public function pay(Request $request)
-{
-    $key = RecoverSession::preserve($request);
-
-    ThirdPartyApi::callbackUrl('/pay/callback?sid='.$key);
-
-    // post form to third-party API...
-}
-```
-
-Final, you can add the `RecoverSession` middleware to the callback route for the API. This middleware will automatically retrieve the encrypted session ID from the callback URL and recover the original session state:
+Final, you can add the `RecoverSession` middleware to the callback route for the API:
 
 ```php
 use Ycs77\LaravelRecoverSession\Middleware\RecoverSession;
@@ -79,8 +85,6 @@ use Ycs77\LaravelRecoverSession\Middleware\RecoverSession;
 Route::post('/pay/callback', [PaymentController::class, 'callback'])
     ->middleware(RecoverSession::class);
 ```
-
-> Reference details for SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
 
 ## Sponsor
 
