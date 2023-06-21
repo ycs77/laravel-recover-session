@@ -29,7 +29,6 @@ Currently, the default value for Laravel's Cookie SameSite is set to `Lax`. This
 Now you need to call `RecoverSession::preserve()` to save the current session ID into cache, and put the key in your callback URL, so that the current session can be resumed after the API returns with the key:
 
 ```php
-use Illuminate\Support\Facades\Session;
 use Ycs77\LaravelRecoverSession\Facades\RecoverSession;
 
 public function pay(Request $request)
