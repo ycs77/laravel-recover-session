@@ -6,7 +6,9 @@
 [![Style CI Build Status][ico-style-ci]][link-style-ci]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Recover Laravel session when form post back from third-party API.
+Recover Laravel session when sending a form post request back from a third-party API like NewebPay.
+
+Currently, Laravel's default Cookie SameSite value is set to `Lax`. This setting prevents cookies from being sent when using form post requests to transmit data to websites on other domains. Consequently, after completing a payment and being redirected back to the original website, users may appear to be automatically logged out due to the inability to retrieve the original login cookie. This package addresses and resolves this issue.
 
 ## Installation
 
@@ -24,9 +26,7 @@ php artisan vendor:publish --tag=recover-session-config
 
 ## Usage
 
-Currently, the default value for Laravel's Cookie SameSite is set to `Lax`. This prevents cookies from being sent when using form post to transmit data to websites on other domains. As a result, after completing a payment and being redirected back to the original website, there is an issue where the user appears to be automatically logged out due to the inability to retrieve the original login cookie, this package will fix this.
-
-Now you need to call `RecoverSession::preserve()` to save the current session ID into cache, and put the key in your callback URL, so that the current session can be resumed after the API returns with the key:
+Now you need to call `RecoverSession::preserve()` to save the current session ID into the cache and include the key in your callback URL. This allows the current session to be resumed after the API returns with the key:
 
 ```php
 use Ycs77\LaravelRecoverSession\Facades\RecoverSession;
@@ -37,17 +37,19 @@ public function pay(Request $request)
 
     ThirdPartyApi::callbackUrl('/pay/callback?sid='.$key);
 
-    // post form to third-party API...
+    // send post form request to the third-party API...
 }
 ```
 
-Thsi package will automatically retrieve the encrypted session ID from the callback URL and recover the original session state on back to this site.
+This package will automatically retrieve the encrypted session ID from the callback URL and restore the original session state upon returning to the site.
 
-> Reference details for SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
+> Reference details for the SameSite: https://developers.google.com/search/blog/2020/01/get-ready-for-new-samesitenone-secure
 
-## Locally Middleware
+## Manually Register Middleware
 
-If you don't using the global recover session, you can set the config `recover-session.global` to `true`, and to adjust the order of the middleware so that `RecoverSession` is placed below `StartSession`. By default, Laravel's `Kernel` does not have the `$middlewarePriority` property. You can find it in the Laravel Framework or copy the code below and paste it into `app/Http/Kernel.php`:
+If you are not using the global recover session, you can set the config `recover-session.global` to `false`, and adjust the order of the middleware so that `RecoverSession` is placed below `StartSession`. by default, Laravel's `Kernel` does not include the `$middlewarePriority` property, so you need to add it manually.
+
+If you are using Laravel 9 or 10, you should add the `$middlewarePriority` property in your application's `app/Http/Kernel.php` file:
 
 ```php
 class Kernel extends HttpKernel
@@ -74,6 +76,39 @@ class Kernel extends HttpKernel
         \Illuminate\Auth\Middleware\Authorize::class,
     ];
 }
+```
+
+If you are using Laravel 11+, you can add the `RecoverSession` middleware to the `$middlewarePriority` property in the `app/Http/Kernel.php` file:
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->priority([
+        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Ycs77\LaravelRecoverSession\Middleware\RecoverSession::class, // need to place `RecoverSession` below `StartSession`
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
+    ]);
+})
+```
+
+If you are using Laravel 11.31+, it provides a concise method to append middleware to the priority list:
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->appendToPriorityList(
+        \Ycs77\LaravelRecoverSession\Middleware\RecoverSession::class,
+        \Illuminate\Routing\Middleware\ValidateSignature::class
+    );
+})
 ```
 
 Final, you can add the `RecoverSession` middleware to the callback route for the API:

@@ -7,7 +7,7 @@ return [
     | Session ID Key
     |--------------------------------------------------------------------------
     |
-    | The query key for the session ID key in the URL.
+    | The query key for the session ID in the URL.
     |
     */
 
