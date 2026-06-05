@@ -55,35 +55,6 @@ This package will automatically retrieve the encrypted session ID from the callb
 
 If you are not using the global recover session, you can set the config `recover-session.global` to `false`, and adjust the order of the middleware so that `RecoverSession` is placed below `StartSession`. by default, Laravel's `Kernel` does not include the `$middlewarePriority` property, so you need to add it manually.
 
-If you are using Laravel 9 or 10, you should add the `$middlewarePriority` property in your application's `app/Http/Kernel.php` file:
-
-```php
-class Kernel extends HttpKernel
-{
-    /**
-     * The priority-sorted list of middleware.
-     *
-     * Forces non-global middleware to always be in the given order.
-     *
-     * @var string[]
-     */
-    protected $middlewarePriority = [
-        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
-        \Illuminate\Cookie\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Ycs77\LaravelRecoverSession\Middleware\RecoverSession::class, // need to place `RecoverSession` below `StartSession`
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
-        \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
-        \Illuminate\Contracts\Session\Middleware\AuthenticatesSessions::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \Illuminate\Auth\Middleware\Authorize::class,
-    ];
-}
-```
-
 If you are using Laravel 11+, you can add the `RecoverSession` middleware to the `$middlewarePriority` property in the `app/Http/Kernel.php` file:
 
 ```php
