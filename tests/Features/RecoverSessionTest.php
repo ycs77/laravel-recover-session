@@ -1,6 +1,10 @@
 <?php
 
+use Illuminate\Config\Repository;
+use Illuminate\Encryption\Encrypter;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Illuminate\Support\Str;
 use Ycs77\LaravelRecoverSession\RecoverSession;
 use Ycs77\LaravelRecoverSession\UserSource;
@@ -13,22 +17,22 @@ test('can preserve session ID', function () use ($key, $sid) {
 
     Str::createRandomStringsUsing(fn () => $key);
 
-    /** @var \Illuminate\Foundation\Application */
+    /** @var Application */
     $app = $this->app;
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Config\Repository */
+    /** @var Repository */
     $config = $app->make('config');
 
-    /** @var \Illuminate\Cache\Repository */
+    /** @var Illuminate\Cache\Repository */
     $cache = $app->make('cache.store');
 
-    /** @var \Illuminate\Session\Store */
+    /** @var Store */
     $session = $app->make('session.store');
     $session->setId($sid);
 
-    /** @var \Illuminate\Encryption\Encrypter */
+    /** @var Encrypter */
     $encrypter = $app->make('encrypter');
 
     $userSource = new UserSource($session);
@@ -46,21 +50,21 @@ test('can preserve session ID', function () use ($key, $sid) {
 test('can preserve user source', function () {
     now()->setTestNow('2000-01-01 00:00:00');
 
-    /** @var \Illuminate\Foundation\Application */
+    /** @var Application */
     $app = $this->app;
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Config\Repository */
+    /** @var Repository */
     $config = $app->make('config');
 
-    /** @var \Illuminate\Cache\Repository */
+    /** @var Illuminate\Cache\Repository */
     $cache = $app->make('cache.store');
 
-    /** @var \Illuminate\Session\Store */
+    /** @var Store */
     $session = $app->make('session.store');
 
-    /** @var \Illuminate\Encryption\Encrypter */
+    /** @var Encrypter */
     $encrypter = $app->make('encrypter');
 
     $userSource = new UserSource($session);
@@ -80,18 +84,18 @@ test('can preserve user source', function () {
 test('can recover session ID', function () use ($key, $sid) {
     now()->setTestNow('2000-01-01 00:00:00');
 
-    /** @var \Illuminate\Foundation\Application */
+    /** @var Application */
     $app = $this->app;
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Config\Repository */
+    /** @var Repository */
     $config = $app->make('config');
 
-    /** @var \Illuminate\Cache\Repository */
+    /** @var Illuminate\Cache\Repository */
     $cache = $app->make('cache.store');
 
-    /** @var \Illuminate\Session\Store */
+    /** @var Store */
     $session = $app->make('session.store');
     $session->put('user_source_for_recover_session', [
         'hash' => md5(json_encode([
@@ -101,7 +105,7 @@ test('can recover session ID', function () use ($key, $sid) {
         'expired_at' => '2000-01-01 01:00:00',
     ]);
 
-    /** @var \Illuminate\Encryption\Encrypter */
+    /** @var Encrypter */
     $encrypter = $app->make('encrypter');
 
     $cache->add('recover_session_sessionkey000000000000000000000000000000', $encrypter->encryptString($sid));
@@ -121,19 +125,19 @@ test('can recover session ID', function () use ($key, $sid) {
 });
 
 test('can retrieve session ID', function () use ($key, $sid) {
-    /** @var \Illuminate\Foundation\Application */
+    /** @var Application */
     $app = $this->app;
 
-    /** @var \Illuminate\Config\Repository */
+    /** @var Repository */
     $config = $app->make('config');
 
-    /** @var \Illuminate\Cache\Repository */
+    /** @var Illuminate\Cache\Repository */
     $cache = $app->make('cache.store');
 
-    /** @var \Illuminate\Session\Store */
+    /** @var Store */
     $session = $app->make('session.store');
 
-    /** @var \Illuminate\Encryption\Encrypter */
+    /** @var Encrypter */
     $encrypter = $app->make('encrypter');
 
     $cache->add('recover_session_sessionkey000000000000000000000000000000', $encrypter->encryptString($sid));

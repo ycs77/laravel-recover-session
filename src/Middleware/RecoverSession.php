@@ -16,8 +16,7 @@ class RecoverSession
     public function __construct(
         protected Config $config,
         protected SessionRecoverer $sessionRecoverer
-    ) {
-    }
+    ) {}
 
     /**
      * Handle an incoming request.
@@ -36,7 +35,7 @@ class RecoverSession
     /**
      * Get session ID from request.
      */
-    protected function getSessionIdKey(Request $request): string|null
+    protected function getSessionIdKey(Request $request): ?string
     {
         return $request->query(
             $this->config->get('recover-session.session_id_key')

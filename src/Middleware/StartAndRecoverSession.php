@@ -25,11 +25,12 @@ class StartAndRecoverSession extends StartSession
     /**
      * Create a new session middleware.
      */
-    public function __construct(SessionManager $manager,
-                                Config $config,
-                                SessionRecoverer $sessionRecoverer,
-                                callable $cacheFactoryResolver = null)
-    {
+    public function __construct(
+        SessionManager $manager,
+        Config $config,
+        SessionRecoverer $sessionRecoverer,
+        ?callable $cacheFactoryResolver = null
+    ) {
         parent::__construct($manager, $cacheFactoryResolver);
 
         $this->config = $config;
@@ -60,7 +61,7 @@ class StartAndRecoverSession extends StartSession
     /**
      * Get session ID from request.
      */
-    protected function getSessionIdKey(Request $request): string|null
+    protected function getSessionIdKey(Request $request): ?string
     {
         return $request->query(
             $this->config->get('recover-session.session_id_key')

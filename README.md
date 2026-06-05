@@ -3,7 +3,6 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![GitHub Tests Action Status][ico-github-action]][link-github-action]
-[![Style CI Build Status][ico-style-ci]][link-style-ci]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 Recover Laravel session when sending a form post request back from a third-party API like NewebPay.
@@ -146,10 +145,8 @@ If you think this package has helped you, please consider [Becoming a sponsor](h
 [ico-version]: https://img.shields.io/packagist/v/ycs77/laravel-recover-session?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square
 [ico-github-action]: https://img.shields.io/github/actions/workflow/status/ycs77/laravel-recover-session/tests.yml?branch=1.x&label=tests&style=flat-square
-[ico-style-ci]: https://github.styleci.io/repos/651973134/shield?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/ycs77/laravel-recover-session?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/ycs77/laravel-recover-session
 [link-github-action]: https://github.com/ycs77/laravel-recover-session/actions/workflows/tests.yml?query=branch%3A1.x
-[link-style-ci]: https://github.styleci.io/repos/651973134
 [link-downloads]: https://packagist.org/packages/ycs77/laravel-recover-session

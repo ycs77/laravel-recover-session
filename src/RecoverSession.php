@@ -22,8 +22,7 @@ class RecoverSession
         protected Session $session,
         protected Encrypter $encrypter,
         protected UserSource $userSource
-    ) {
-    }
+    ) {}
 
     /**
      * Preserve the current session ID.

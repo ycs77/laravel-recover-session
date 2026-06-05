@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Illuminate\Session\Store as Session;
 use Mockery as m;
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use Ycs77\LaravelRecoverSession\UserSource;
 
 test('can preserve user source data to session', function () {
@@ -10,7 +13,7 @@ test('can preserve user source data to session', function () {
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Session\Store|\Mockery\MockInterface|\Mockery\LegacyMockInterface */
+    /** @var Store|MockInterface|LegacyMockInterface */
     $session = m::mock(Session::class);
     $session->shouldReceive('put')
         ->once()
@@ -32,7 +35,7 @@ test('user source is validated', function () {
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Session\Store|\Mockery\MockInterface|\Mockery\LegacyMockInterface */
+    /** @var Store|MockInterface|LegacyMockInterface */
     $session = m::mock(Session::class);
     $session->shouldReceive('get')
         ->once()
@@ -55,7 +58,7 @@ test('user source is invalid', function () {
 
     $request = Request::create('/');
 
-    /** @var \Illuminate\Session\Store|\Mockery\MockInterface|\Mockery\LegacyMockInterface */
+    /** @var Store|MockInterface|LegacyMockInterface */
     $session = m::mock(Session::class);
     $session->shouldReceive('get')
         ->once()
@@ -74,7 +77,7 @@ test('user source is invalid', function () {
 });
 
 test('can clear user source', function () {
-    /** @var \Illuminate\Session\Store|\Mockery\MockInterface|\Mockery\LegacyMockInterface */
+    /** @var Store|MockInterface|LegacyMockInterface */
     $session = m::mock(Session::class);
     $session->shouldReceive('remove')
         ->once()
