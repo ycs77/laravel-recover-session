@@ -3,6 +3,7 @@
 namespace Ycs77\LaravelRecoverSession;
 
 use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Session\SessionManager;
