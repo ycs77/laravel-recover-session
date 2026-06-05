@@ -14,6 +14,7 @@ Currently, Laravel's default Cookie SameSite value is set to `Lax`. This setting
 | Version | PHP Version | Laravel Version |
 | --- | --- | --- |
 | 1.x | >=8.1 | >=9.x |
+| 2.x | >=8.2 | >=11.x |
 
 ## Installation
 
@@ -150,9 +151,9 @@ If you think this package has helped you, please consider [Becoming a sponsor](h
 
 [ico-version]: https://img.shields.io/packagist/v/ycs77/laravel-recover-session?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square
-[ico-github-action]: https://img.shields.io/github/actions/workflow/status/ycs77/laravel-recover-session/tests.yml?branch=1.x&label=tests&style=flat-square
+[ico-github-action]: https://img.shields.io/github/actions/workflow/status/ycs77/laravel-recover-session/tests.yml?branch=2.x&label=tests&style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/ycs77/laravel-recover-session?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/ycs77/laravel-recover-session
-[link-github-action]: https://github.com/ycs77/laravel-recover-session/actions/workflows/tests.yml?query=branch%3A1.x
+[link-github-action]: https://github.com/ycs77/laravel-recover-session/actions/workflows/tests.yml?query=branch%3A2.x
 [link-downloads]: https://packagist.org/packages/ycs77/laravel-recover-session
