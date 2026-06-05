@@ -9,6 +9,12 @@ Recover Laravel session when sending a form post request back from a third-party
 
 Currently, Laravel's default Cookie SameSite value is set to `Lax`. This setting prevents cookies from being sent when using form post requests to transmit data to websites on other domains. Consequently, after completing a payment and being redirected back to the original website, users may appear to be automatically logged out due to the inability to retrieve the original login cookie. This package addresses and resolves this issue.
 
+## Supported Versions
+
+| Version | PHP Version | Laravel Version |
+| --- | --- | --- |
+| 1.x | >=8.1 | >=9.x |
+
 ## Installation
 
 Via Composer:
