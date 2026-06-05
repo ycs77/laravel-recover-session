@@ -63,7 +63,7 @@ class RecoverSession
 
         try {
             $sessionId = $this->encrypter->decryptString($sessionId);
-        } catch (DecryptException $e) {
+        } catch (DecryptException) {
             return false;
         }
 

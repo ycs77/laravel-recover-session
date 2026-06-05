@@ -1,4 +1,4 @@
-name: Tests
+name: Static analysis
 
 on:
   push:
@@ -7,21 +7,16 @@ on:
     branches: [2.x]
 
 jobs:
-  tests:
+  static:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.2, 8.3, 8.4, 8.5]
-        laravel: [11.*, 12.*, 13.*]
-        exclude:
-          - php: 8.5
-            laravel: 11.*
-          - php: 8.2
-            laravel: 13.*
+        php: [8.5]
+        laravel: [13.*]
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+    name: Static tests
 
     steps:
       - name: Checkout
@@ -43,5 +38,11 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-progress --ansi --no-update
           composer update --prefer-stable --prefer-dist --no-interaction --no-progress --ansi --no-security-blocking
 
-      - name: Unit tests
-        run: composer test:unit
+      - name: Refacto
+        run: composer test:refacto
+
+      - name: Linting
+        run: composer test:lint
+
+      - name: Static analysis
+        run: composer test:analyse

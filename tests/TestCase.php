@@ -29,7 +29,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            'Ycs77\LaravelRecoverSession\RecoverSessionServiceProvider',
+            \Ycs77\LaravelRecoverSession\RecoverSessionServiceProvider::class,
         ];
     }
 }

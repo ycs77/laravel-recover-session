@@ -8,22 +8,13 @@ use Illuminate\Session\Store as Session;
 class UserSource
 {
     /**
-     * The session store instance.
-     */
-    protected Session $session;
-
-    /**
      * The key for user information in session.
      */
     protected string $sessionKey = 'user_source_for_recover_session';
 
-    /**
-     * Create a new middleware.
-     */
-    public function __construct(Session $session)
-    {
-        $this->session = $session;
-    }
+    public function __construct(
+        protected Session $session
+    ) {}
 
     /**
      * Preserve the user information into session.

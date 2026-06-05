@@ -12,29 +12,13 @@ use Ycs77\LaravelRecoverSession\RecoverSession as SessionRecoverer;
 
 class StartAndRecoverSession extends StartSession
 {
-    /**
-     * The config repository.
-     */
-    protected Config $config;
-
-    /**
-     * The session recoverer.
-     */
-    protected SessionRecoverer $sessionRecoverer;
-
-    /**
-     * Create a new session middleware.
-     */
     public function __construct(
         SessionManager $manager,
-        Config $config,
-        SessionRecoverer $sessionRecoverer,
+        protected Config $config,
+        protected SessionRecoverer $sessionRecoverer,
         ?callable $cacheFactoryResolver = null
     ) {
         parent::__construct($manager, $cacheFactoryResolver);
-
-        $this->config = $config;
-        $this->sessionRecoverer = $sessionRecoverer;
     }
 
     /**
